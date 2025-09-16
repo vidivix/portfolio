@@ -1,0 +1,105 @@
+openapi: 3.0.0
+info:
+  title: API сервиса Lucky Insuranc
+  description: >-
+    Коллекция запросов API сервиса. Сервис предоставляет информацию об страховках для животных
+  version: 1.0.1
+  contact:
+    name: LuckyFilms API
+    url: https://lucky.com/info
+    email: LuckyFilms@lucky.com
+  termsOfService: https://lucky.com/terms
+  license:
+    name: license 1.0.1 Lucky
+    url: https://lucky.com/license
+servers:
+  - url: https://4453f729-1913-49be-9dcc-b7a316afa17f.mock.pstmn.io
+    description: Lucky Mock
+tags:
+  - name: Lucky Insuranc API
+paths:
+  /insurance:
+    get:
+      tags:
+        - Lucky Insuranc API
+      summary: Описание всех страховок для животных
+      description: "Возвращает список всех доступных страховых полисов для животных, включая тип животного, условия покрытия, стоимость и валюту"
+      operationId: insuranceList
+      responses:
+        '200':
+          description: список страховок
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  description:
+                    type: string
+                    description: "Общее описание страховых продуктов"
+                    example: 'Помощь ветеринара 24/7. Онлайн консультации. Большой выбор ветклиник'
+                  insurances:
+                    type: array
+                    description: "Список доступных страховых полисов"
+                    items:
+                          $ref: '#/components/schemas/response_200'
+        '400':
+          description: Неверный запрос. Один или несколько параметров указаны некорректно
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid request parameters
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+        '503':
+          description: Сервис временно недоступен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Service temporarily unavailable
+components:
+  schemas:
+    response_200:
+      required:
+        - type
+        - details
+        - price
+        - currency
+        - period
+      type: object
+      properties: 
+        type: 
+          type: string
+          description: Тип животного, на которое оформляется страховка
+          example: 'кошка'
+        details:
+          type: string
+          description: Подробное описание условий страхового полиса
+          example: 'Круглосуточные консультации ветеринарного врача по телефону, в чате или видеосвязи. Включена ежегодная вакцинация от бешенства'
+        price:
+          type: integer
+          description: Стоимость страховки
+          example: 50000
+        currency:
+          type: string
+          description: Валюта стоимости страховки
+          example: 'рублей'
+        period:
+          type: string
+          description: Период оплаты
+          example: 'в год'
